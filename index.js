@@ -244,13 +244,13 @@ async function main () {
         }
       }
     } catch (err) {
-      if (commit.commit.message.toUpperCase().contains(bumpTypes.majorKeyword)) {
+      if (commit.commit.message.toUpperCase().includes(bumpTypes.majorKeyword)) {
         majorChanges.push(commit.commit.message)
         core.info(`[MAJOR] Commit ${commit.sha} will cause a major version bump.`)
-      } else if (commit.commit.message.toUpperCase().contains(bumpTypes.minorKeyword)) {
+      } else if (commit.commit.message.toUpperCase().includes(bumpTypes.minorKeyword)) {
         minorChanges.push(commit.commit.message)
         core.info(`[MINOR] Commit ${commit.sha} will cause a minor version bump.`)
-      } else if (commit.commit.message.toUpperCase().contains(bumpTypes.patchKeyword)) {
+      } else if (commit.commit.message.toUpperCase().includes(bumpTypes.patchKeyword)) {
         patchChanges.push(commit.commit.message)
         core.info(`[PATCH] Commit ${commit.sha} will cause a patch version bump.`)
       } else {

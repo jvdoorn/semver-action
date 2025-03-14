@@ -53169,20 +53169,7 @@ async function main () {
   for (const commit of commits) {
     try {
       const cAst = cc.toConventionalChangelogFormat(cc.parser(commit.commit.message))
-      if (!cAst.type) {
-        if (commit.commit.message.toUpperCase().contains(bumpTypes.majorKeyword)) {
-          majorChanges.push(commit.commit.message)
-          core.info(`[MAJOR] Commit ${commit.sha} will cause a major version bump.`)
-        } else if (commit.commit.message.toUpperCase().contains(bumpTypes.minorKeyword)) {
-          minorChanges.push(commit.commit.message)
-          core.info(`[MINOR] Commit ${commit.sha} will cause a minor version bump.`)
-        } else if (commit.commit.message.toUpperCase().contains(bumpTypes.patchKeyword)) {
-          patchChanges.push(commit.commit.message)
-          core.info(`[PATCH] Commit ${commit.sha} will cause a patch version bump.`)
-        } else {
-          core.info(`[SKIP] Commit ${commit.sha} will not cause any version bump.`)
-        }
-      } else if (bumpTypes.major.includes(cAst.type)) {
+      if (bumpTypes.major.includes(cAst.type)) {
         majorChanges.push(commit.commit.message)
         core.info(`[MAJOR] Commit ${commit.sha} of type ${cAst.type} will cause a major version bump.`)
       } else if (bumpTypes.minor.includes(cAst.type)) {
@@ -53201,7 +53188,18 @@ async function main () {
         }
       }
     } catch (err) {
-      core.info(`[INVALID] Skipping commit ${commit.sha} as it doesn't follow conventional commit format ${err.message}`)
+      if (commit.commit.message.toUpperCase().contains(bumpTypes.majorKeyword)) {
+        majorChanges.push(commit.commit.message)
+        core.info(`[MAJOR] Commit ${commit.sha} will cause a major version bump.`)
+      } else if (commit.commit.message.toUpperCase().contains(bumpTypes.minorKeyword)) {
+        minorChanges.push(commit.commit.message)
+        core.info(`[MINOR] Commit ${commit.sha} will cause a minor version bump.`)
+      } else if (commit.commit.message.toUpperCase().contains(bumpTypes.patchKeyword)) {
+        patchChanges.push(commit.commit.message)
+        core.info(`[PATCH] Commit ${commit.sha} will cause a patch version bump.`)
+      } else {
+        core.info(`[SKIP] Commit ${commit.sha} will not cause any version bump.`)
+      }
     }
   }
 

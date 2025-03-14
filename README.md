@@ -59,8 +59,11 @@ jobs:
 | `token` | Your GitHub token. (e.g. `${{ github.token }}`) | :white_check_mark: |  |
 | `branch` | The branch to use when fetching list of commits to compare against. (e.g. `main`) | :x: | `main` |
 | `majorList` | Comma separated commit prefixes, used to bump Major version.  *A `BREAKING CHANGE` note in a commit message will still cause a major bump.* | :x: |  |
+| `majorKeyword` | A keyword to use to bump Major version. | :x: | `[major]` |
 | `minorList` | Comma separated commit prefixes, used to bump Minor version. | :x: | `feat, feature` |
+| `minorKeyword` | A keyword to use to bump Minor version. | :x: | `[minor]` |
 | `patchList` | Comma separated commit prefixes, used to bump Patch version. | :x: | `fix, bugfix, perf, refactor, test, tests` |
+| `patchKeyword` | A keyword to use to bump Patch version. | :x: | `[patch]` |
 | `patchAll` | If set to `true`, will ignore `patchList` and always count commits as a Patch. | :x: | `false` |
 | `additionalCommits` | A list of additional commit messages to parse in order to calculate semver. | :x: |  |
 | `fallbackTag` | A fallback tag to use if no valid latest tag can be found. | :x: |  |

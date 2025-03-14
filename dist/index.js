@@ -52969,6 +52969,9 @@ async function main () {
     major: core.getInput('majorList').split(',').map(p => p.trim()).filter(p => p),
     minor: core.getInput('minorList').split(',').map(p => p.trim()).filter(p => p),
     patch: core.getInput('patchList').split(',').map(p => p.trim()).filter(p => p),
+    majorKeyword: core.getInput('majorKeyword').toUpperCase(),
+    minorKeyword: core.getInput('minorKeyword').toUpperCase(),
+    patchKeyword: core.getInput('patchKeyword').toUpperCase(),
     patchAll: (core.getInput('patchAll') === true || core.getInput('patchAll') === 'true')
   }
 
@@ -53166,7 +53169,20 @@ async function main () {
   for (const commit of commits) {
     try {
       const cAst = cc.toConventionalChangelogFormat(cc.parser(commit.commit.message))
-      if (bumpTypes.major.includes(cAst.type)) {
+      if (!cAst.type) {
+        if (commit.commit.message.toUpperCase().contains(bumpTypes.majorKeyword)) {
+          majorChanges.push(commit.commit.message)
+          core.info(`[MAJOR] Commit ${commit.sha} will cause a major version bump.`)
+        } else if (commit.commit.message.toUpperCase().contains(bumpTypes.minorKeyword)) {
+          minorChanges.push(commit.commit.message)
+          core.info(`[MINOR] Commit ${commit.sha} will cause a minor version bump.`)
+        } else if (commit.commit.message.toUpperCase().contains(bumpTypes.patchKeyword)) {
+          patchChanges.push(commit.commit.message)
+          core.info(`[PATCH] Commit ${commit.sha} will cause a patch version bump.`)
+        } else {
+          core.info(`[SKIP] Commit ${commit.sha} will not cause any version bump.`)
+        }
+      } else if (bumpTypes.major.includes(cAst.type)) {
         majorChanges.push(commit.commit.message)
         core.info(`[MAJOR] Commit ${commit.sha} of type ${cAst.type} will cause a major version bump.`)
       } else if (bumpTypes.minor.includes(cAst.type)) {
@@ -53185,7 +53201,7 @@ async function main () {
         }
       }
     } catch (err) {
-      core.info(`[INVALID] Skipping commit ${commit.sha} as it doesn't follow conventional commit format.`)
+      core.info(`[INVALID] Skipping commit ${commit.sha} as it doesn't follow conventional commit format ${err.message}`)
     }
   }
 
